@@ -18,8 +18,9 @@ defmodule MazeWalls.BinaryTree do
     # Assume that we don't need to take care of the edge walls now
     # Iterate through all of the cells
     # Generate a wall to either the north or the east (handling edge cases)
+    g = %MazeWalls.Grid{nrows: num_rows, ncols: num_cols}
 
-    walls = for loc <- MazeWalls.Grid.get_locations(num_rows, num_cols),
+    walls = for loc <- MazeWalls.Grid.get_locations(g),
                 !MazeWalls.Grid.is_north_edge?(loc, num_rows),
                 !MazeWalls.Grid.is_east_edge?(loc, num_cols),
                 into: MapSet.new, do: pick_north_or_east_wall(loc)

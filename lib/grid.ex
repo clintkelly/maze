@@ -57,8 +57,8 @@ defmodule MazeWalls.Grid do
   def neigh_north({row, col}), do: {row-1, col}
   def neigh_south({row, col}), do: {row+1, col}
 
-  def get_locations(num_rows, num_cols) do
-    for row <- 0..(num_rows-1), col <- 0..(num_cols-1), into: MapSet.new, do: { row, col }
+  def get_locations(grid = %MazeWalls.Grid{nrows: nrows, ncols: ncols, walls: walls}) do
+    for row <- 0..(nrows-1), col <- 0..(ncols-1), into: MapSet.new, do: { row, col }
   end
 
   def is_north_edge?(grid, { row, col }), do: row == 0

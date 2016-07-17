@@ -5,7 +5,7 @@ defmodule GridTest do
   alias MazeWalls.Grid.Ascii
 
   test "Generation of all locations" do
-    assert Grid.get_locations(2,2) == MapSet.new([ {0,0}, {0,1}, {1,0}, {1,1}])
+    assert Grid.get_locations(%MazeWalls.Grid{nrows: 2, ncols: 2}) == MapSet.new([ {0,0}, {0,1}, {1,0}, {1,1}])
   end
 
   """
