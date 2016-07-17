@@ -24,7 +24,7 @@ defmodule MazeWalls.Grid do
           fn(col, str) ->
             loc = { row, col }
             wall_east = MapSet.new([loc, MazeWalls.Grid.neigh_east(loc)])
-            if wall_east in walls or MazeWalls.Grid.is_east_edge?(loc, ncols) do
+            if wall_east in walls or MazeWalls.Grid.is_east_edge?(grid, loc) do
               str <> "   |"
             else
               str <> "    "
@@ -42,7 +42,7 @@ defmodule MazeWalls.Grid do
             loc = { row, col }
             wall_south = MapSet.new([loc, MazeWalls.Grid.neigh_south(loc)])
             cond do
-              MazeWalls.Grid.is_south_edge?(loc, nrows) -> str <> "---+"
+              MazeWalls.Grid.is_south_edge?(grid, loc) -> str <> "---+"
               wall_south in walls -> str <> "---+"
               true -> str <> "   +"
             end
@@ -61,9 +61,8 @@ defmodule MazeWalls.Grid do
     for row <- 0..(num_rows-1), col <- 0..(num_cols-1), into: MapSet.new, do: { row, col }
   end
 
-  def is_north_edge?({ row, col }, num_rows), do: row == 0
-  def is_south_edge?({ row, col }, num_rows), do: row == num_rows - 1 
-
-  def is_east_edge?({ row, col }, num_cols), do: col == num_cols - 1
+  def is_north_edge?(grid, { row, col }), do: row == 0
+  def is_south_edge?(grid, { row, col }), do: row == grid.nrows - 1 
+  def is_east_edge?(grid, { row, col }), do: col == grid.ncols - 1
 
 end
