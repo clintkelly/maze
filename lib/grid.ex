@@ -1,51 +1,54 @@
 defmodule MazeWalls.Grid do
   defstruct nrows: 5, ncols: 5, walls: MapSet.new
 
-  def as_ascii(grid = %MazeWalls.Grid{nrows: nrows, ncols: ncols, walls: walls}) do
-    # Start by drawing the top of the maze
-    top = "+" <> String.duplicate("---+", ncols) <> "\n"
+  defmodule Ascii do
 
-    Enum.reduce(
-      0..(nrows-1),
-      top,
-      fn(row, str) ->
-        str <> as_ascii_walls_between_columns(grid, row) <> as_ascii_walls_between_rows(grid, row)
-      end)
-  end
+    def as_ascii(grid = %MazeWalls.Grid{nrows: nrows, ncols: ncols, walls: walls}) do
+      # Start by drawing the top of the maze
+      top = "+" <> String.duplicate("---+", ncols) <> "\n"
 
-  def as_ascii_walls_between_columns(
-    grid = %MazeWalls.Grid{nrows: nrows, ncols: ncols, walls: walls},
-    row) do
       Enum.reduce(
-        0..(ncols-1), 
-        "|", # Start with wall on the west edge
-        fn(col, str) ->
-          loc = { row, col }
-          wall_east = MapSet.new([loc, neigh_east(loc)])
-          if wall_east in walls or is_east_edge?(loc, ncols) do
-            str <> "   |"
-          else
-            str <> "    "
-          end
-        end) <> "\n"
-  end
+        0..(nrows-1),
+        top,
+        fn(row, str) ->
+          str <> walls_between_columns(grid, row) <> walls_between_rows(grid, row)
+        end)
+    end
 
-  def as_ascii_walls_between_rows(
-    grid = %MazeWalls.Grid{nrows: nrows, ncols: ncols, walls: walls},
-    row) do
-      Enum.reduce(
-        0..(ncols-1), 
-        "+", # Start with wall on the west edge
-        fn(col, str) ->
-          loc = { row, col }
-          wall_south = MapSet.new([loc, neigh_south(loc)])
-          cond do
-            is_south_edge?(loc, nrows) -> str <> "---+"
-            wall_south in walls -> str <> "---+"
-            true -> str <> "   +"
-          end
+    def walls_between_columns(
+      grid = %MazeWalls.Grid{nrows: nrows, ncols: ncols, walls: walls},
+      row) do
+        Enum.reduce(
+          0..(ncols-1), 
+          "|", # Start with wall on the west edge
+          fn(col, str) ->
+            loc = { row, col }
+            wall_east = MapSet.new([loc, MazeWalls.Grid.neigh_east(loc)])
+            if wall_east in walls or MazeWalls.Grid.is_east_edge?(loc, ncols) do
+              str <> "   |"
+            else
+              str <> "    "
+            end
+          end) <> "\n"
+    end
 
-        end) <> "\n"
+    def walls_between_rows(
+      grid = %MazeWalls.Grid{nrows: nrows, ncols: ncols, walls: walls},
+      row) do
+        Enum.reduce(
+          0..(ncols-1), 
+          "+", # Start with wall on the west edge
+          fn(col, str) ->
+            loc = { row, col }
+            wall_south = MapSet.new([loc, MazeWalls.Grid.neigh_south(loc)])
+            cond do
+              MazeWalls.Grid.is_south_edge?(loc, nrows) -> str <> "---+"
+              wall_south in walls -> str <> "---+"
+              true -> str <> "   +"
+            end
+
+          end) <> "\n"
+    end
   end
 
   # TODO: Throw errors / return nil if neighbors do not exist?

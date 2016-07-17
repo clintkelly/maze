@@ -1,10 +1,11 @@
 defmodule GridTest do
   use ExUnit.Case
 
-  import MazeWalls.Grid
+  alias MazeWalls.Grid
+  alias MazeWalls.Grid.Ascii
 
   test "Generation of all locations" do
-    assert MazeWalls.Grid.get_locations(2,2) == MapSet.new([ {0,0}, {0,1}, {1,0}, {1,1}])
+    assert Grid.get_locations(2,2) == MapSet.new([ {0,0}, {0,1}, {1,0}, {1,1}])
   end
 
   """
@@ -17,7 +18,7 @@ defmodule GridTest do
 
 
   test "walls between columns" do
-    grid = %MazeWalls.Grid{
+    grid = %Grid{
       nrows: 2,
       ncols: 2,
       walls: MapSet.new([
@@ -25,37 +26,37 @@ defmodule GridTest do
       ])
     }
 
-    assert MazeWalls.Grid.as_ascii_walls_between_columns(grid, 1) == "|   |   |\n"
+    assert Ascii.walls_between_columns(grid, 1) == "|   |   |\n"
 
   end
 
   test "walls between rows" do
-    grid = %MazeWalls.Grid{
+    grid = %Grid{
       nrows: 2,
       ncols: 2,
       walls: MapSet.new([
         MapSet.new([{1,0}, {1,1}]),
       ])
     }
-    assert MazeWalls.Grid.as_ascii_walls_between_rows(grid, 0) == "+   +   +\n"
-    assert MazeWalls.Grid.as_ascii_walls_between_rows(grid, 1) == "+---+---+\n"
+    assert Ascii.walls_between_rows(grid, 0) == "+   +   +\n"
+    assert Ascii.walls_between_rows(grid, 1) == "+---+---+\n"
   end
 
   test "walls between rows" do
-    grid = %MazeWalls.Grid{
+    grid = %Grid{
       nrows: 2,
       ncols: 2,
       walls: MapSet.new([
         MapSet.new([{1,0}, {0,0}]),
       ])
     }
-    assert MazeWalls.Grid.as_ascii_walls_between_rows(grid, 0) == "+---+   +\n"
-    assert MazeWalls.Grid.as_ascii_walls_between_rows(grid, 1) == "+---+---+\n"
+    assert Ascii.walls_between_rows(grid, 0) == "+---+   +\n"
+    assert Ascii.walls_between_rows(grid, 1) == "+---+---+\n"
 
   end
 
   test "as ascii" do
-    grid = %MazeWalls.Grid{
+    grid = %Grid{
       nrows: 2,
       ncols: 2,
       walls: MapSet.new([
@@ -71,14 +72,14 @@ defmodule GridTest do
       +---+---+
       """
 
-    IO.puts("\n" <> MazeWalls.Grid.as_ascii(grid))
+    IO.puts("\n" <> Ascii.as_ascii(grid))
 
-    assert MazeWalls.Grid.as_ascii(grid) == ascii
+    assert Ascii.as_ascii(grid) == ascii
 
   end
 
   # Quick dumb test
   test "Create a grid" do
-    assert %MazeWalls.Grid{ nrows: _, ncols: _ } = %MazeWalls.Grid{} 
+    assert %Grid{ nrows: _, ncols: _ } = %Grid{} 
   end
 end
