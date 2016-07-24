@@ -27,12 +27,18 @@ defmodule MazeWalls.Grid do
     is_nil(neigh) or MapSet.member?(grid.walls, wall_between(loc, neigh))
   end
 
-  def neighbors(loc = { _row, _col }, grid) do
+  def neighbors(loc = { _row, _col }, grid, consider_walls? \\ true) do
     # Get all of the possible neighbors
-    for neigh <- [ neigh_east(loc, grid), neigh_west(loc, grid), neigh_north(loc, grid), neigh_south(loc, grid) ],
-      !is_nil(neigh),
-      # Filter out any with walls
-      !MapSet.member?(grid.walls, wall_between(loc, neigh)), do: neigh
+    neighbors = for neigh <- [
+      neigh_north(loc, grid), neigh_east(loc, grid), neigh_south(loc, grid), neigh_west(loc, grid) ],
+      !is_nil(neigh), do: neigh
+    
+    if consider_walls? do
+      neighbors
+      |> Enum.reject(&MapSet.member?(grid.walls, wall_between(loc, &1)))
+    else
+      neighbors
+    end
   end
 
   def get_locations(%MazeWalls.Grid{nrows: nrows, ncols: ncols}) do
