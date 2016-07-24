@@ -3,7 +3,7 @@ defmodule MazeWalls.Grid do
 
   defmodule Ascii do
 
-    def as_ascii(grid = %MazeWalls.Grid{nrows: nrows, ncols: ncols}) do
+    def as_ascii(grid = %MazeWalls.Grid{nrows: nrows, ncols: ncols}, cell_contents \\ fn(_loc, _grid)  -> " " end ) do
       # Start by drawing the top of the maze
       top = "+" <> String.duplicate("---+", ncols) <> "\n"
 
@@ -11,19 +11,19 @@ defmodule MazeWalls.Grid do
         0..(nrows-1),
         top,
         fn(row, str) ->
-          str <> walls_between_columns(grid, row) <> walls_between_rows(grid, row)
+          str <> walls_between_columns(grid, row, cell_contents) <> walls_between_rows(grid, row)
         end)
     end
 
-    def walls_between_columns(grid = %MazeWalls.Grid{ncols: ncols}, row) do
+    def walls_between_columns(grid = %MazeWalls.Grid{ncols: ncols}, row, cell_contents \\ fn(_loc, _grid) -> " " end) do
         Enum.reduce(
           0..(ncols-1), 
           "|", # Start with wall on the west edge
           fn(col, str) ->
             if MazeWalls.Grid.wall_to_east?({row,col}, grid) do
-              str <> "   |"
+              str <> " " <> cell_contents.({row,col}, grid) <> " |"
             else
-              str <> "    "
+              str <> " " <> cell_contents.({row,col}, grid) <> "  "
             end
           end) <> "\n"
     end

@@ -4,7 +4,7 @@ defmodule DijkstraTest do
   alias MazeWalls.Grid
   alias MazeWalls.Dijkstra
 
-  test "as ascii" do
+  setup do
     grid = %Grid{
       nrows: 2,
       ncols: 2,
@@ -13,7 +13,7 @@ defmodule DijkstraTest do
       ])
     }
 
-    _grid = """
+    _grid_as_ascii = """
       +---+---+
       |       |
       +---+   +
@@ -30,9 +30,31 @@ defmodule DijkstraTest do
 
     root = {0,0}
 
-    assert Dijkstra.get_new_frontier([root], grid, %{root => 0}) == %{ {0,1} => 1 }
-    assert Dijkstra.get_new_frontier([{0,1}], grid, %{root => 0, {0, 1} => 1}) == %{ {1,1} => 2 }
+    {:ok, grid: grid, distances: distances, root: root}
+  end
 
+  test "advancing the frontier from the root", %{grid: grid, distances: distances, root: root} do
+    assert Dijkstra.get_new_frontier([root], grid, %{root => 0}) == %{ {0,1} => 1 }
+  end
+
+  test "advancing the frontier from a non-root", %{grid: grid, distances: distances, root: root} do
+    assert Dijkstra.get_new_frontier([{0,1}], grid, %{root => 0, {0, 1} => 1}) == %{ {1,1} => 2 }
+  end
+
+  test "running dijktra's algorithm on a simple maze", %{grid: grid, distances: distances, root: root} do
     assert Dijkstra.dijkstra({0,0}, grid) == distances
+  end
+
+  test "running dijktra's algorithm on a simple maze and printing the results", %{grid: grid, distances: distances, root: root} do
+    assert Dijkstra.dijkstra({0,0}, grid) == distances
+    ascii =  MazeWalls.Grid.Ascii.as_ascii(grid, fn(loc, _grid) -> Integer.to_string(distances[loc], 36) end)
+    grid_with_distances = """
+      +---+---+
+      | 0   1 |
+      +---+   +
+      | 3   2 |
+      +---+---+
+      """
+      assert ascii == grid_with_distances
   end
 end
