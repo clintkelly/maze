@@ -1,21 +1,16 @@
 defmodule MazeWalls.Grid do
   defstruct nrows: 5, ncols: 5, walls: MapSet.new
 
+  def wall_between(cell={_row,_col}, neigh={_row2,_col2}) do
+    # TODO: Assert the cells are actually neighbors!
+    MapSet.new([cell, neigh])
+  end
+
   # Return the neighboring cell, regardless of walls. Returns nil if you are on the edge of the grid.
   def neigh_east( loc={row, col}, grid), do: if is_east_edge?( loc, grid), do: nil, else: {row, col+1}
   def neigh_west( loc={row, col}, grid), do: if is_west_edge?( loc, grid), do: nil, else: {row, col-1}
   def neigh_north(loc={row, col}, grid), do: if is_north_edge?(loc, grid), do: nil, else: {row-1, col}
   def neigh_south(loc={row, col}, grid), do: if is_south_edge?(loc, grid), do: nil, else: {row+1, col}
-
-  def get_locations(%MazeWalls.Grid{nrows: nrows, ncols: ncols}) do
-    for row <- 0..(nrows-1), col <- 0..(ncols-1), into: MapSet.new, do: { row, col }
-  end
-
-  # Get all of the locations in a given row
-  # TODO: Check that row is legal
-  def walk_row(row, grid) do
-    for col <- 0..(grid.ncols-1), do: { row, col }
-  end
 
   def is_north_edge?({ row, _col }, _grid), do: row == 0
   def is_south_edge?({ row, _col }, grid ), do: row == grid.nrows - 1 
@@ -32,17 +27,22 @@ defmodule MazeWalls.Grid do
     is_nil(neigh) or MapSet.member?(grid.walls, wall_between(loc, neigh))
   end
 
-  def wall_between(cell={_row,_col}, neigh={_row2,_col2}) do
-    # TODO: Assert the cells are actually neighbors!
-    MapSet.new([cell, neigh])
-  end
-
   def neighbors(loc = { _row, _col }, grid) do
     # Get all of the possible neighbors
     for neigh <- [ neigh_east(loc, grid), neigh_west(loc, grid), neigh_north(loc, grid), neigh_south(loc, grid) ],
       !is_nil(neigh),
       # Filter out any with walls
       !MapSet.member?(grid.walls, wall_between(loc, neigh)), do: neigh
+  end
+
+  def get_locations(%MazeWalls.Grid{nrows: nrows, ncols: ncols}) do
+    for row <- 0..(nrows-1), col <- 0..(ncols-1), into: MapSet.new, do: { row, col }
+  end
+
+  # Get all of the locations in a given row
+  # TODO: Check that row is legal
+  def walk_row(row, grid) do
+    for col <- 0..(grid.ncols-1), do: { row, col }
   end
 
 end
