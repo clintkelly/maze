@@ -2,6 +2,7 @@ defmodule DijkstraTest do
   use ExUnit.Case
 
   alias MazeWalls.Grid
+  alias MazeWalls.Ascii
   alias MazeWalls.Dijkstra
 
   setup do
@@ -47,7 +48,7 @@ defmodule DijkstraTest do
 
   test "running dijktra's algorithm on a simple maze and printing the results", %{grid: grid, distances: distances, root: root} do
     assert Dijkstra.dijkstra({0,0}, grid) == distances
-    ascii =  MazeWalls.Grid.Ascii.as_ascii(grid, fn(loc, _grid) -> Integer.to_string(distances[loc], 36) end)
+    ascii =  Ascii.as_ascii(grid, fn(loc, _grid) -> Integer.to_string(distances[loc], 36) end)
     grid_with_distances = """
       +---+---+
       | 0   1 |
