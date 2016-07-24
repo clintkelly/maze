@@ -36,9 +36,9 @@ defmodule MazeWalls.Sidewinder do
   def get_possible_path_dirs(loc, grid) do
     cond do
       # If you are on the north edge, hole must go to the east
-      MazeWalls.Grid.is_north_edge?(grid, loc) -> [:east]
+      MazeWalls.Grid.is_north_edge?(loc, grid) -> [:east]
       # Otherwise, if you are on the east edge, hole must go to the north
-      MazeWalls.Grid.is_east_edge?(grid, loc) -> [:north]
+      MazeWalls.Grid.is_east_edge?(loc, grid) -> [:north]
       true -> [:north, :east]
     end
   end
@@ -93,16 +93,16 @@ defmodule MazeWalls.Sidewinder do
   def create_wall_to_north_of(loc, grid) do
     # If this is the northern row, just return nil
     cond do
-      MazeWalls.Grid.is_north_edge?(grid, loc) -> nil
-      true -> MapSet.new([loc, MazeWalls.Grid.neigh_north(loc)])
+      MazeWalls.Grid.is_north_edge?(loc, grid) -> nil
+      true -> MapSet.new([loc, MazeWalls.Grid.neigh_north(loc, grid)])
     end
   end
 
   def create_wall_to_east_of(loc = { row, col }, grid) do
     # If this is the east edge, return nil
     cond do
-      MazeWalls.Grid.is_east_edge?(grid, loc) -> nil
-      true -> MapSet.new([loc, MazeWalls.Grid.neigh_east(loc)])
+      MazeWalls.Grid.is_east_edge?(loc, grid) -> nil
+      true -> MapSet.new([loc, MazeWalls.Grid.neigh_east(loc, grid)])
     end
   end
 end
