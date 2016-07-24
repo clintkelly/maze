@@ -82,4 +82,9 @@ defmodule GridTest do
   test "Create a grid" do
     assert %Grid{ nrows: _, ncols: _ } = %Grid{} 
   end
+
+  test "walk row" do
+    grid = %Grid{ nrows: 2, ncols: 5 }
+    assert Grid.walk_row(1, grid) == [ {1,0}, {1,1}, {1,2}, {1,3}, {1,4} ]
+  end
 end

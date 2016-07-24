@@ -61,6 +61,12 @@ defmodule MazeWalls.Grid do
     for row <- 0..(nrows-1), col <- 0..(ncols-1), into: MapSet.new, do: { row, col }
   end
 
+  # Get all of the locations in a given row
+  # TODO: Check that row is legal
+  def walk_row(row, grid) do
+    for col <- 0..(grid.ncols-1), do: { row, col }
+  end
+
   def is_north_edge?(grid, { row, col }), do: row == 0
   def is_south_edge?(grid, { row, col }), do: row == grid.nrows - 1 
   def is_east_edge?(grid, { row, col }), do: col == grid.ncols - 1
