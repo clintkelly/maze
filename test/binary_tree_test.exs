@@ -13,6 +13,12 @@ defmodule BinaryTreeTest do
     end
   end
 
+  test "works with dijkstra" do
+    for _ <- 0..100 do
+      grid = MazeWalls.BinaryTree.generate_with_binary_tree(20,20)
+      distances = MazeWalls.Dijkstra.dijkstra({0,0}, grid)
+    end
+  end
 end
 
 

@@ -44,6 +44,13 @@ defmodule SidewinderTest do
     walls = MazeWalls.Sidewinder.get_north_walls_for_run(run, grid)
     assert MapSet.size(walls) == 1
   end
+
+  test "works with dijkstra" do
+    for _ <- 0..100 do
+      grid = MazeWalls.Sidewinder.generate_with_sidewinder(20, 20)
+      distances = MazeWalls.Dijkstra.dijkstra({0,0}, grid)
+    end
+  end
 end
 
 

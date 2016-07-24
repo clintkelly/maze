@@ -21,8 +21,8 @@ defmodule MazeWalls.BinaryTree do
     g = %MazeWalls.Grid{nrows: num_rows, ncols: num_cols}
 
     walls = for loc <- MazeWalls.Grid.get_locations(g),
-                !MazeWalls.Grid.is_north_edge?(loc, num_rows),
-                !MazeWalls.Grid.is_east_edge?(loc, num_cols),
+                !MazeWalls.Grid.is_north_edge?(loc, g),
+                !MazeWalls.Grid.is_east_edge?(loc, g),
                 into: MapSet.new, do: pick_north_or_east_wall(loc)
     %MazeWalls.Grid{ nrows: num_rows, ncols: num_cols, walls: walls }
   end
