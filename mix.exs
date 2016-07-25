@@ -27,6 +27,9 @@ defmodule MazeWalls.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      #{:png, git: "https://github.com/yuce/png"}
+      {:bump, git: "https://github.com/evanfarrar/ex_bump" }
+    ]
   end
 end
