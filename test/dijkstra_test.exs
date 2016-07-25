@@ -59,12 +59,12 @@ defmodule DijkstraTest do
       assert ascii == grid_with_distances
   end
 
-  test "compute the furthest point from another point", %{grid: grid, distances: distances} do
+  test "tracking backwards", %{grid: grid, distances: distances} do
     assert Dijkstra.dijkstra({0,0}, grid) == distances
     assert Dijkstra.trace_backward({0,0}, {1,0}, grid, distances) == [ {0,0}, {0,1}, {1,1}, {1,0} ]
   end
 
-  test "tracing backwards", %{grid: grid, distances: distances, root: root} do
+  test "finding the farthest point from another", %{grid: grid, distances: distances, root: root} do
     { loc, dist } = Dijkstra.farthest_from(root, grid)
     assert loc == {1,0}
     assert dist == 3

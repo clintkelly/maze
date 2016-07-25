@@ -1,8 +1,6 @@
 defmodule MazeWalls.Bmp do
 
-  import Canvas
   import Size
-  import Color
 
   alias MazeWalls.Grid
 
@@ -12,22 +10,28 @@ defmodule MazeWalls.Bmp do
     canvas = Canvas.size(%Size{height: grid.nrows*cell_size+1, width: grid.ncols*cell_size+1}) 
     |> Canvas.fill(color: Color.named(:black))
 
+    # First fill in the cells themselves
     canvas = Enum.reduce(
       Grid.get_locations(grid),
       canvas,
-      fn cell, canvas -> with_cell(canvas, cell, grid, cell_size, cell_color) end)
+      fn cell, canvas -> with_cell_fill(canvas, cell, grid, cell_size, cell_color) end)
+
+    # Now draw the walls over the cells
+    canvas = Enum.reduce(
+      Grid.get_locations(grid),
+      canvas,
+      fn cell, canvas -> with_cell(canvas, cell, grid, cell_size) end)
 
     Bump.write(filename: "foo.bmp", canvas: canvas)
 
   end
 
-  def with_cell(canvas, cell={_row,_col}, grid, cell_size \\ 10, cell_color \\ fn(_loc) -> Color.named(:black) end) do
+  def with_cell(canvas, cell={_row,_col}, grid, cell_size \\ 10) do
     canvas
     |> maybe_with_wall_to_north(cell, grid, cell_size)
     |> maybe_with_wall_to_west(cell, grid, cell_size)
     |> maybe_with_wall_to_east(cell, grid, cell_size)
     |> maybe_with_wall_to_south(cell, grid, cell_size)
-    |> with_cell_fill(cell, grid, cell_size, cell_color)
   end
 
   def with_cell_fill(canvas, cell={row,col}, grid, cell_size, cell_color) do
@@ -38,7 +42,7 @@ defmodule MazeWalls.Bmp do
         color: cell_color.(cell),
         rect: %Rect{ 
           origin: %Point{ x: x1, y: y1 }, 
-          size: %Size{ height: cell_size-1, width: cell_size-1 },
+          size: %Size{ height: cell_size, width: cell_size },
         }
       )
   end
