@@ -47,7 +47,7 @@ defmodule AldousBroderTest do
       grid,
       MapSet.new([ neigh_east ]), # east neighbor is already visited
       MapSet.new,
-      fn neigh_list=[a=^neigh_east, b] -> a end)
+      fn _neigh_list=[a=^neigh_east, _] -> a end)
 
     assert neigh == neigh_east
     assert visited == MapSet.new [ root, neigh_east ]
@@ -64,7 +64,7 @@ defmodule AldousBroderTest do
       grid,
       MapSet.new([ neigh_east ]), # east neighbor is already visited
       MapSet.new,
-      fn neigh_list=[a=^neigh_east, b=^neigh_south] -> b end)
+      fn _neigh_list=[^neigh_east, b=^neigh_south] -> b end)
 
     assert neigh == neigh_south
     assert visited == MapSet.new [ root, neigh_east ]
