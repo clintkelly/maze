@@ -58,4 +58,27 @@ defmodule DijkstraTest do
       """
       assert ascii == grid_with_distances
   end
+
+  test "compute the furthest point from another point", %{grid: grid, distances: distances} do
+    assert Dijkstra.dijkstra({0,0}, grid) == distances
+    assert Dijkstra.trace_backward({0,0}, {1,0}, grid, distances) == [ {0,0}, {0,1}, {1,1}, {1,0} ]
+  end
+
+  test "tracing backwards", %{grid: grid, distances: distances, root: root} do
+    { loc, dist } = Dijkstra.farthest_from(root, grid)
+    assert loc == {1,0}
+    assert dist == 3
+  end
+
+  test "find the furthest-apart pair of points" do
+    # Create a grid in which {0,0} is not one of the furthest points. 
+    grid = %Grid{
+      nrows: 2,
+      ncols: 2,
+      walls: MapSet.new([
+        Grid.wall_between({1,0}, {1,1})
+      ])
+    }
+    assert Dijkstra.farthest_apart_points(grid) == MapSet.new([ {1,0}, {1,1} ])
+  end
 end
