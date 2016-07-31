@@ -37,7 +37,7 @@ defmodule MazeWalls.Dijkstra do
 
   def farthest_from(loc, grid) do
     distances_from_root = dijkstra(loc, grid)
-    Enum.max_by(distances_from_root, fn {loc, dist} -> dist end)
+    Enum.max_by(distances_from_root, fn {_loc, dist} -> dist end)
   end
 
   def farthest_apart_points(grid) do

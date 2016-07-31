@@ -98,7 +98,7 @@ defmodule MazeWalls.Sidewinder do
     end
   end
 
-  def create_wall_to_east_of(loc = { row, col }, grid) do
+  def create_wall_to_east_of(loc = { _row, _col }, grid) do
     # If this is the east edge, return nil
     cond do
       MazeWalls.Grid.is_east_edge?(loc, grid) -> nil

@@ -52,3 +52,9 @@ defmodule MazeWalls.Grid do
   end
 
 end
+
+defimpl MazeWalls.AnyGrid, for: MazeWalls.Grid do
+  def wall_between(_grid, cell, neigh) do
+    MazeWalls.Grid.wall_between(cell, neigh)
+  end
+end

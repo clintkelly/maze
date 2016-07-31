@@ -50,4 +50,9 @@ defmodule GridTest do
     neighbors = Grid.neighbors(cell, grid) 
     assert MapSet.new(neighbors) == MapSet.new [ {1,0} ]
   end
+
+  test "create walls between" do
+    grid = %Grid{}
+    _ = MazeWalls.AnyGrid.wall_between(grid, {0,0}, {1,0})
+  end
 end
