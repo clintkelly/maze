@@ -56,4 +56,4 @@ time works:
     in /Users/clint_kelly/play/elixir/maze_walls/ on master
     ›
 
-¯\_(ツ)_/¯
+¯\\_(ツ)_/¯
