@@ -25,5 +25,5 @@ defprotocol MazeWalls.AnyGrid do
   @doc """
   Return a text representation of the grid.
   """
-  def as_text(grid)
+  def as_text(grid, cell_contents \\ fn(_loc, _grid)  -> " " end )
 end

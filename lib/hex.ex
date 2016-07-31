@@ -103,11 +103,11 @@ defmodule MazeWalls.Hex do
   \___/   \___/
   """
 
-  def as_text(grid) do
+  def as_text(grid, cell_contents \\ fn(_loc, _grid)  -> " " end ) do
     # For every cell, get {row,col} => char entry / entries for every wall
     # Then turn that map of {row,col} => char into text (fill in blank with " ")
     AnyGrid.all_cells(grid)
-    |> Enum.flat_map(fn cell -> text_walls_for_cell(grid, cell) end)
+    |> Enum.flat_map(fn cell -> text_walls_for_cell(grid, cell, cell_contents) end)
     |> Map.new
     |> draw
   end
@@ -130,7 +130,11 @@ defmodule MazeWalls.Hex do
       end
   end
 
-  defp text_walls_for_cell(grid, cell = {_row, _col} ) do
+  defp text_walls_for_cell(
+    grid,
+    cell = {_row, _col},
+    cell_contents \\ fn(_loc, _grid)  -> " " end
+  ) do
     []
     |> with_wall_to_northwest(grid, cell)
     |> with_wall_to_northeast(grid, cell)
@@ -138,6 +142,7 @@ defmodule MazeWalls.Hex do
     |> with_wall_to_southwest(grid, cell)
     |> with_wall_to_north(grid, cell)
     |> with_wall_to_south(grid, cell)
+    |> with_cell_contents(grid, cell, cell_contents.(cell, grid))
   end
 
   # Helper methods for creating text walls.
@@ -182,6 +187,11 @@ defmodule MazeWalls.Hex do
     end
   end
 
+  # TODO: Assert size of contents is one character
+  defp with_cell_contents(text_walls, grid, cell={row, col}, contents) do
+    [ twall(cell, 2 * row + 1, 4 * col + 2, contents) | text_walls ]
+  end
+
   defp with_wall_to_south(text_walls, grid, cell={row, col}) do
     # Wall to south is at tcol = 4 * col + 1, trow = 2 * row + 2
     if wall_to_south?(cell, grid) do
@@ -214,7 +224,7 @@ defimpl MazeWalls.AnyGrid, for: MazeWalls.Hex do
     %MazeWalls.Hex{ nrows: grid.nrows, ncols: grid.ncols, walls: MapSet.union(grid.walls, walls) }
   end
 
-  def as_text(grid) do
-    MazeWalls.Hex.as_text(grid)
+  def as_text(grid, cell_contents \\ fn(_loc, _grid)  -> " " end ) do
+    MazeWalls.Hex.as_text(grid, cell_contents)
   end
 end
