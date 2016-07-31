@@ -1,5 +1,6 @@
 defmodule MazeWalls.AldousBroder do
   alias MazeWalls.AnyGrid
+  alias MazeWalls.Grid
 
   @moduledoc """
   Aldous-Broder algorithm.
@@ -10,21 +11,17 @@ defmodule MazeWalls.AldousBroder do
 
   """
 
-  def generate(num_rows \\ 5, num_cols \\ 5) do
-    g = %MazeWalls.Grid{nrows: num_rows, ncols: num_cols}
+  def generate(grid \\ %Grid{nrows: 5, ncols: 5}) do
+    # Start somewhere!
+    [starting_cell] = Enum.take(AnyGrid.all_cells(grid), 1)
 
-    # Sanity test
-    _ = AnyGrid.wall_between(g, {0,0}, {0,0})
-
-    links = step({0,0}, g, MapSet.new, MapSet.new)
-    walls = walls_from_links(links, g)
-    %MazeWalls.Grid{ nrows: num_rows, ncols: num_cols, walls: walls }
+    links = step(starting_cell, grid, MapSet.new, MapSet.new)
+    AnyGrid.with_walls(grid, walls_from_links(links, grid))
   end
 
   def go_to_neighbor(cell={_,_}, grid, visited, links, neighbor_chooser \\ &Enum.random/1) do
     # Get the neighbors of the cell.
-    #neighbors = MazeWalls.Grid.neighbors(cell, grid, consider_walls?=false)
-    neighbors = MazeWalls.Grid.neighbors(cell, grid, false)
+    neighbors = MazeWalls.AnyGrid.neighbors(grid, cell, false)
     
     # Pick a random cell.
     neigh = neighbor_chooser.(neighbors)
@@ -55,12 +52,11 @@ defmodule MazeWalls.AldousBroder do
   end
 
   def walls_from_links(links, grid) do
-    walls = for cell <- MazeWalls.Grid.get_locations(grid),
-      neigh <- MazeWalls.Grid.neighbors(cell, grid, false),
+    walls = for cell <- AnyGrid.all_cells(grid),
+      neigh <- AnyGrid.neighbors(grid, cell, false),
       link = link_between(cell, neigh),
       !MapSet.member?(links, link),
       into: MapSet.new,
-      #do: MazeWalls.Grid.wall_between(cell, neigh)
       do: AnyGrid.wall_between(grid, cell, neigh)
     walls
   end

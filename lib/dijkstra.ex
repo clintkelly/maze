@@ -4,6 +4,8 @@ defmodule MazeWalls.Dijkstra do
   point to every other point in the maze.
   """
 
+  alias MazeWalls.AnyGrid
+
   @doc """
 
 
@@ -14,7 +16,7 @@ defmodule MazeWalls.Dijkstra do
 
   def get_new_frontier(frontier, grid, distances) do
     for cell = {_row, _col} <- frontier, 
-      neigh = {_nrow, _ncol} <- MazeWalls.Grid.neighbors(cell, grid), 
+      neigh = {_nrow, _ncol} <- AnyGrid.neighbors(grid, cell), 
       !Map.has_key?(distances, neigh),
       dist = distances[cell],
       into: Map.new,
@@ -25,8 +27,9 @@ defmodule MazeWalls.Dijkstra do
   Distances should include every cell in "frontier".
   """
   def dijkstra_step([], grid, distances) do
-    # Assertion that you have the distance to every cell.
-    for cell <- MazeWalls.Grid.get_locations(grid), do: %{ ^cell => _dist } = distances
+    # This is an empty frontier -> we are done!
+    # Just assert that we have the distance to every cell.
+    for cell <- AnyGrid.all_cells(grid), do: %{ ^cell => _dist } = distances
     distances
   end
 
@@ -61,7 +64,7 @@ defmodule MazeWalls.Dijkstra do
       new_path
     else
       # Get all of the neighbors.
-      neighbors = MazeWalls.Grid.neighbors(current, grid)
+      neighbors = AnyGrid.neighbors(grid, current)
 
       # Should be exactly one neighbor with distance one less than current node.
       [ predecessor ] = Enum.filter(neighbors, fn loc -> distances[loc] == distances[current] - 1 end)

@@ -73,7 +73,14 @@ defmodule AldousBroderTest do
 
   test "works with Dijkstra's algorithm (maze is valid)" do
     for _ <- 1..100 do
-      maze = AldousBroder.generate(10,10)
+      maze = AldousBroder.generate
+      Dijkstra.dijkstra({0,0}, maze)
+    end
+  end
+
+  test "works with hex grid" do
+    for _ <- 1..100 do
+      maze = AldousBroder.generate(%MazeWalls.Hex{nrows: 5, ncols: 5})
       Dijkstra.dijkstra({0,0}, maze)
     end
   end

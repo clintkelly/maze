@@ -57,4 +57,15 @@ defimpl MazeWalls.AnyGrid, for: MazeWalls.Grid do
   def wall_between(_grid, cell, neigh) do
     MazeWalls.Grid.wall_between(cell, neigh)
   end
+
+  def neighbors(grid, cell, consider_walls? \\ true) do
+    MazeWalls.Grid.neighbors(cell, grid, consider_walls?)
+  end
+
+  def all_cells(grid) do
+    MazeWalls.Grid.get_locations(grid)
+  end
+  def with_walls(grid, walls) do
+    %MazeWalls.Grid{ nrows: grid.nrows, ncols: grid.ncols, walls: MapSet.union(grid.walls, walls) }
+  end
 end
