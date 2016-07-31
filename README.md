@@ -57,3 +57,46 @@ time works:
     ›
 
 ¯\\_(ツ)_/¯
+
+## Example usage:
+
+    Interactive Elixir (1.3.0) - press Ctrl+C to exit (type h() ENTER for help)
+    iex(1)> maze = MazeWalls.AldousBroder.generate(%MazeWalls.Hex{})
+    %MazeWalls.Hex{ncols: 5, nrows: 5,
+     walls: #MapSet<[#MapSet<[{0, 0}, {1, 0}]>, #MapSet<[{0, 1}, {0, 2}]>,
+      #MapSet<[{0, 1}, {1, 1}]>, #MapSet<[{0, 3}, {1, 2}]>,
+      #MapSet<[{0, 3}, {1, 3}]>, #MapSet<[{0, 3}, {1, 4}]>,
+      #MapSet<[{1, 0}, {2, 0}]>, #MapSet<[{1, 1}, {1, 2}]>,
+      #MapSet<[{1, 1}, {2, 2}]>, #MapSet<[{1, 2}, {1, 3}]>,
+      #MapSet<[{1, 2}, {2, 2}]>, #MapSet<[{1, 3}, {1, 4}]>,
+      #MapSet<[{1, 3}, {2, 2}]>, #MapSet<[{1, 3}, {2, 4}]>,
+      #MapSet<[{2, 0}, {2, 1}]>, #MapSet<[{2, 1}, {2, 2}]>,
+      #MapSet<[{2, 1}, {3, 0}]>, #MapSet<[{2, 1}, {3, 1}]>,
+      #MapSet<[{2, 1}, {3, 2}]>, #MapSet<[{2, 2}, {3, 2}]>,
+      #MapSet<[{2, 3}, {3, 2}]>, #MapSet<[{2, 3}, {3, 3}]>,
+      #MapSet<[{2, 4}, {3, 4}]>, #MapSet<[{3, 0}, {3, 1}]>,
+      #MapSet<[{3, 0}, {4, 0}]>, #MapSet<[{3, 1}, {4, 1}]>,
+      #MapSet<[{3, 1}, {4, 2}]>, #MapSet<[{3, 2}, {4, 2}]>,
+      #MapSet<[{3, 3}, {4, 2}]>, #MapSet<[{3, 3}, {4, 4}]>,
+      #MapSet<[{3, 4}, {4, 4}]>, #MapSet<[{4, 0}, {4, 1}]>]>}
+    iex(2)> [a,b] = MapSet.to_list(MazeWalls.Dijkstra.farthest_apart_points(maze))
+    [{3, 0}, {4, 0}]
+    iex(3)> path = MazeWalls.Dijkstra.path_between_points(a, b, maze)
+    [{3, 0}, {2, 0}, {1, 1}, {1, 0}, {0, 1}, {1, 2}, {0, 2}, {0, 3}, {0, 4}, {1, 4},
+     {2, 4}, {2, 3}, {3, 4}, {3, 3}, {3, 2}, {3, 1}, {4, 0}]
+    iex(4)> IO.puts MazeWalls.AnyGrid.as_text(maze, fn(loc,grid) -> if Enum.member?(path,loc), do: "*", else: " " end)
+     ___     ___     ___
+    /   \___/ * \___/ * \
+    \___  * \     *     /
+    / *  ___  * \___/ * \
+    \___  * \___/   \   /
+    / *     /   \   / * \
+    \   /   \___  *  ___/
+    / * \___/ * \___  * \
+    \___/ *  ___  *  ___/
+    / *  ___/   \   /   \
+    \___/    ___     ___/
+        \___/   \___/
+
+    :ok
+    iex(5)>
