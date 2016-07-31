@@ -68,4 +68,8 @@ defimpl MazeWalls.AnyGrid, for: MazeWalls.Grid do
   def with_walls(grid, walls) do
     %MazeWalls.Grid{ nrows: grid.nrows, ncols: grid.ncols, walls: MapSet.union(grid.walls, walls) }
   end
+
+  def as_text(grid) do
+    MazeWalls.Ascii.as_ascii(grid)
+  end
 end

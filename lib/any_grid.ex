@@ -21,4 +21,9 @@ defprotocol MazeWalls.AnyGrid do
   Return a new instance of the grid, but with these walls added to it.
   """
   def with_walls(grid, walls)
+
+  @doc """
+  Return a text representation of the grid.
+  """
+  def as_text(grid)
 end

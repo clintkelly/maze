@@ -24,4 +24,26 @@ defmodule HexTest do
     neighbors = AnyGrid.neighbors(grid, cell)
     assert MapSet.new(neighbors) == MapSet.new [ {0, 1}, {1, 0} ]
   end
+
+  test "show as ascii" do
+    # Annoying that we cannot put \ directly in the string...
+    ascii = """
+       ___     ___ 
+      /   |___/   |
+      |___    |   /
+      /    ___    |
+      |___/    ___/
+          |___/    
+      """ |> String.replace("|", "\\")
+
+    walls = MapSet.new([
+      Hex.wall_between( {0,0}, {1,0} ),
+      Hex.wall_between( {0,1}, {0,2} ),
+      Hex.wall_between( {0,1}, {1,1} ),
+      Hex.wall_between( {1,0}, {1,1} ),
+    ])
+
+    maze = %Hex{nrows: 2, ncols: 3, walls: walls}
+    assert AnyGrid.as_text(maze) == ascii
+  end
 end
